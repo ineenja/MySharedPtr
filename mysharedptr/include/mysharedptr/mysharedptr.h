@@ -24,10 +24,11 @@ public:
     ~MySharedPtr(){
         (*ptrCounter)--;
         if (*ptrCounter == 0){
-            *ptr = 0;
-            delete ptr;
+            delete ptr; // удаление объекта из памяти при удалении последнего указателя на него
             delete ptrCounter;           
         }
+        ptr = nullptr; // явное очищение указателя
+        ptrCounter = nullptr;
     }
 
 

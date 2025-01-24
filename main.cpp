@@ -3,20 +3,31 @@
 
 int main()
 {
-//    std::shared_ptr<int> ptr {std::make_shared<int>(1)};
+    //std::shared_ptr<int> ptr {std::make_shared<int>(1)};
+    int *a;
 
-    MySharedPtr<int> ptr1(new int(2));
+    for (int i = 0; i != 1; i++){
+        MySharedPtr<int> ptr1(new int(1));
 
-    MySharedPtr<int> ptr2 = ptr1;
+        a = ptr1.getPtr();
 
-    ptr1.~MySharedPtr();
+        std::cout << ptr1.getPtr() << '\n';
+        std::cout << ptr1.getPtrObj() << '\n';
+        std::cout << *a << '\n' << '\n';
 
-    int * check = ptr1.getPtr();
-    std::cout << *check << '\n' << '\n';
+        for (int i = 0; i != 1; i++){
+            MySharedPtr<int> ptr2 = ptr1;
+            std::cout << ptr2.getPtr() << '\n';
+            std::cout << ptr2.getPtrObj() << '\n';
+            std::cout << *a << '\n' << '\n';
+        }
 
-    ptr2.~MySharedPtr();
+        std::cout << ptr1.getPtr() << '\n';
+        std::cout << ptr1.getPtrObj() << '\n';
+        std::cout << *a << '\n' << '\n';
+    }
 
-    std::cout << *check << '\n' << '\n';
+    std::cout << *a << '\n';
 
     std::cout << "test" << '\n';
 
