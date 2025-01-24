@@ -2,7 +2,7 @@
 #define MYSHAREDPTR
 
 #include <memory>
-
+#include <iostream>
 
 
 
@@ -24,10 +24,9 @@ public:
     ~MySharedPtr(){
         (*ptrCounter)--;
         if (*ptrCounter == 0){
+            *ptr = 0;
             delete ptr;
-            delete ptrCounter;
-//            ptr = nullptr;
-//            ptrCounter = nullptr;
+            delete ptrCounter;           
         }
     }
 
