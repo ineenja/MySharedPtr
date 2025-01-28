@@ -17,7 +17,7 @@ public:
 
     MySharedPtr(): ptr(nullptr), ptrCounter(nullptr) {}; // конструктор без параметров создающий никуда не адресующий указатель
     MySharedPtr(T* ptr): ptr(ptr), ptrCounter(new uint32_t(1)) {}; // конструктор создающий новый умный указатель на переменную
-    MySharedPtr(MySharedPtr<T>& other): ptr(other.ptr), ptrCounter(other.ptrCounter) {
+    MySharedPtr(const MySharedPtr<T>& other): ptr(other.ptr), ptrCounter(other.ptrCounter) {
         *ptrCounter += 1;
     }; // конструктор копирующий существующий указатель
 
@@ -85,18 +85,7 @@ public:
 
 template<typename T, typename... Args>
 MySharedPtr<T> makeShared(Args&&... args) {
-    std::allocator<T> alloc;    // Создаем аллокатор для управления памятью
-
-    // Выделяем память для объекта и счетчика ссылок
-    auto* storage = alloc.allocate(1); // Выделяем память для одного объекта типа T
-
-    // Создаем объект в выделенной памяти
-    new(storage) T(std::forward<Args>(args)...);;
-
-    // Создаем sharedptr, который будет управлять этим объектом
-    // Контрольный блок создается внутри shared_ptr
-    return MySharedPtr<T>(storage); // Пробрасываем исключение дальше
-
+    return MySharedPtr<T>(new T(std::forward<Args>(args)...));
 }
 
 #endif
