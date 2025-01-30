@@ -1,39 +1,52 @@
 #include <gtest/gtest.h>
 #include <iostream>
-
-//static constexpr auto fileName = "TestGenParams1.txt";
-//TEST(GenFactoryTests, CreationOfGenerators) {
+#include <mysharedptr/mysharedptr.h>
 
 
-//    FileReader CheckFile = FileReader(fileName); // копируем данные о сигналах из файлы в программу
-//    CheckFile.fillInformation();
+TEST(ObjectValueTest, MySharedPtrTests) {
+    int test = 1;
+    MySharedPtr<int> myptr {makeShared<int>(test)};
+    std::shared_ptr<int> ptr {std::make_shared<int>(test)};
 
-//    std::vector<std::shared_ptr<IParameters>> ParamsCheckVector = CheckFile.getSignalsParameters();
+    ASSERT_EQ(myptr.getPtrObj(), *ptr.get());
+}
 
-//    GeneratorsFactory SignalGenerators = GeneratorsFactory(ParamsCheckVector); // вызываем фабрику генераторов этих сигналов
+TEST(CounterTest1, MySharedPtrTests) {
+    int test = 1;
+    MySharedPtr<int> myptr {makeShared<int>(test)};
+    std::shared_ptr<int> ptr {std::make_shared<int>(test)};
 
-//    std::vector<std::shared_ptr<const IGenerator>> GensToCheck = SignalGenerators.getSignalsGenerators();
+    ASSERT_EQ(myptr.getPtrCounter(), ptr.use_count());
 
-//    EXPECT_TRUE(GensToCheck[0]);
-//    EXPECT_TRUE(GensToCheck[1]);
-//    EXPECT_EQ(GensToCheck.size(), 2);
-//}
+    MySharedPtr<int> myptrcopy = myptr;
+    std::shared_ptr<int> ptrcopy = ptr;
 
-//TEST(GenFactoryTests, TypesOfGenerators) {
+    ASSERT_EQ(myptrcopy.getPtrCounter(), ptrcopy.use_count());
+}
 
+TEST(DestructorTest11, MySharedPtrTests) {
 
-//    FileReader CheckFile = FileReader(fileName); // копируем данные о сигналах из файлы в программу
-//    CheckFile.fillInformation();
+    int test = 1;
+    int *a;
+    int *b;
 
-//    std::vector<std::shared_ptr<IParameters>> ParamsCheckVector = CheckFile.getSignalsParameters();
+    for (int i = 0; i != 1; i++){
+        MySharedPtr<int> myptr (new int(test));
+        std::shared_ptr<int> ptr {new int(test)};
 
-//    GeneratorsFactory SignalGenerators = GeneratorsFactory(ParamsCheckVector); // вызываем фабрику генераторов этих сигналов
+        a = myptr.getPtr();
+        b = ptr.get();
 
-//    std::vector<std::shared_ptr<const IGenerator>> GensToCheck = SignalGenerators.getSignalsGenerators();
+        for (int i = 0; i != 1; i++){
+            MySharedPtr<int> myptr2 = myptr;
+            std::shared_ptr<int> ptr2 = ptr;
+        }
 
-//    ASSERT_TRUE((GensToCheck[0].get()));
-//    ASSERT_TRUE((GensToCheck[1].get()));
-//}
+    }
+
+    ASSERT_NE(*a, test);
+    ASSERT_NE(*b, test);
+}
 
 
 
