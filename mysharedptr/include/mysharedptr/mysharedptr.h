@@ -13,6 +13,16 @@ private:
     T* ptr;
     uint32_t* ptrCounter;
 
+    void deleteptr(){
+        (*ptrCounter)--;
+        if (*ptrCounter == 0){
+            delete ptr; // удаление объекта из памяти при удалении последнего указателя на него
+            delete ptrCounter;
+        }
+        ptr = nullptr; // явное очищение указателя
+        ptrCounter = nullptr;
+    }
+
 public:
 
     MySharedPtr(): ptr(nullptr), ptrCounter(nullptr) {}; // конструктор без параметров создающий никуда не адресующий указатель
@@ -22,33 +32,30 @@ public:
     }; // конструктор копирующий существующий указатель
 
     ~MySharedPtr(){
-        (*ptrCounter)--;
-        if (*ptrCounter == 0){
-            delete ptr; // удаление объекта из памяти при удалении последнего указателя на него
-            delete ptrCounter;           
-        }
-        ptr = nullptr; // явное очищение указателя
-        ptrCounter = nullptr;
+        deleteptr();
     }
 
 
     MySharedPtr& operator=(const MySharedPtr* r){
-
+        deleteptr();
         ptr = r->ptr;
         ptrCounter = r->ptrCounter;
         if (ptr) {
             ++(*ptrCounter);
         }
-
         return *this;
+    }
+
+    T& operator*() const{
+        return *getPtr();
+    }
+
+    T* operator->() const{
+        return getPtr();
     }
 
     T* getPtr() const{
         return ptr;
-    }
-
-    T getPtrObj() const{
-        return *ptr;
     }
 
     uint32_t getPtrCounter() const{

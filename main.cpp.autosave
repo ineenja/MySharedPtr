@@ -26,7 +26,7 @@ int main()
 
             ptrt = ptr1;
         }
-        std::cout << ptrt.getPtrObj() << '\n';
+        std::cout << *ptrt << '\n';
     }
 
 
